@@ -14,7 +14,9 @@ public class ControllerInteractors : XRDirectInteractor
     private Rigidbody rb;
     private Transform attach;
     public GameObject handPresence;
+    public GameObject handPhysics;
     private ConfigurableJoint joint;
+    private ConfigurableJoint configJoint;
     public bool isGrabbing;
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -23,7 +25,8 @@ public class ControllerInteractors : XRDirectInteractor
         {
             rb = args.interactableObject.transform.GetComponent<Rigidbody>();
             weight = rb.mass;
-            rb.mass = 0.1f;
+            handPhysics.GetComponent<Rigidbody>().mass = rb.mass;
+            handPhysics.GetComponent<Rigidbody>().drag = rb.mass * 3;
             attach = args.interactableObject.transform.GetComponent<XRGrabInteractable>().attachTransform.transform;
             StartCoroutine(DelayEnter());
             joint = handPresence.AddComponent<ConfigurableJoint>();
@@ -38,23 +41,34 @@ public class ControllerInteractors : XRDirectInteractor
             joint.angularYMotion = ConfigurableJointMotion.Locked;
             joint.angularZMotion = ConfigurableJointMotion.Locked;
 
-            joint.massScale = 1f;
-            joint.connectedMassScale = 1f;
-            base.OnSelectEntered(args);
+            joint.massScale = 0.0001f;
+            joint.connectedMassScale = 0.0001f;
+
+            configJoint = handPhysics.AddComponent<ConfigurableJoint>();
+            configJoint.xMotion = ConfigurableJointMotion.Locked;
+            configJoint.yMotion = ConfigurableJointMotion.Locked;
+            configJoint.zMotion = ConfigurableJointMotion.Locked;
+
+            configJoint.angularXMotion = ConfigurableJointMotion.Locked;
+            configJoint.angularYMotion = ConfigurableJointMotion.Locked;
+            configJoint.angularZMotion = ConfigurableJointMotion.Locked;
+            configJoint.connectedBody = rb;
+            configJoint.autoConfigureConnectedAnchor = false;
+            configJoint.connectedAnchor = rb.transform.InverseTransformPoint(handPhysics.transform.position);
         }
     }
 
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
-        rb.mass = weight;
         weight = 0;
         handPresence.transform.position = transform.position;
         handPresence.transform.rotation = transform.rotation;
-
+        Destroy(configJoint);
+        handPhysics.GetComponent<Rigidbody>().mass = 1;
+        handPresence.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(false);
         if (args.interactableObject is XRGrabInteractableTwoAttach)
         {
             DestroyJoint();
-            base.OnSelectExited(args);
         }
         StartCoroutine(DelayExit());
     }
@@ -78,6 +92,8 @@ public class ControllerInteractors : XRDirectInteractor
         {
             collider.isTrigger = true;
         }
+        handPhysics.transform.position = attach.position;
+        handPhysics.transform.rotation = attach.rotation;
         handPresence.transform.position = attach.position;
         handPresence.transform.rotation = attach.rotation;
         yield return new WaitForSeconds(1f);
