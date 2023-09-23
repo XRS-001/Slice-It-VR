@@ -13,7 +13,6 @@ public class ControllerInteractors : XRDirectInteractor
     public GameObject[] colliders;
     private Rigidbody rb;
     private Transform attach;
-    public GameObject handPresence;
     public GameObject handPhysics;
     private ConfigurableJoint joint;
     private ConfigurableJoint configJoint;
@@ -21,7 +20,8 @@ public class ControllerInteractors : XRDirectInteractor
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         isGrabbing = true;
-        if (args.interactableObject is XRGrabInteractableTwoAttach)
+        if (args.interactableObject is XRGrabInteractableTwoAttach
+            || args.interactableObject is TwoHandInteractable)
         {
             rb = args.interactableObject.transform.GetComponent<Rigidbody>();
             weight = rb.mass;
@@ -29,20 +29,6 @@ public class ControllerInteractors : XRDirectInteractor
             handPhysics.GetComponent<Rigidbody>().drag = rb.mass * 3;
             attach = args.interactableObject.transform.GetComponent<XRGrabInteractable>().attachTransform.transform;
             StartCoroutine(DelayEnter());
-            joint = handPresence.AddComponent<ConfigurableJoint>();
-            joint.enableCollision = false;
-            joint.connectedBody = rb;
-
-            joint.xMotion = ConfigurableJointMotion.Locked;
-            joint.yMotion = ConfigurableJointMotion.Locked;
-            joint.zMotion = ConfigurableJointMotion.Locked;
-
-            joint.angularXMotion = ConfigurableJointMotion.Locked;
-            joint.angularYMotion = ConfigurableJointMotion.Locked;
-            joint.angularZMotion = ConfigurableJointMotion.Locked;
-
-            joint.massScale = 0.0001f;
-            joint.connectedMassScale = 0.0001f;
 
             configJoint = handPhysics.AddComponent<ConfigurableJoint>();
             configJoint.xMotion = ConfigurableJointMotion.Locked;
@@ -60,23 +46,17 @@ public class ControllerInteractors : XRDirectInteractor
 
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
-        weight = 0;
-        handPresence.transform.position = transform.position;
-        handPresence.transform.rotation = transform.rotation;
-        Destroy(configJoint);
-        handPhysics.GetComponent<Rigidbody>().mass = 1;
-        handPresence.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(false);
-        if (args.interactableObject is XRGrabInteractableTwoAttach)
+        if (args.interactableObject is XRGrabInteractableTwoAttach
+            || args.interactableObject is TwoHandInteractable)
         {
-            DestroyJoint();
+            weight = 0;
+            handPhysics.transform.position = transform.position;
+            handPhysics.transform.rotation = transform.rotation;
+            Destroy(configJoint);
+            handPhysics.GetComponent<Rigidbody>().mass = 1;
+            handPhysics.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(false);
+            StartCoroutine(DelayExit());
         }
-        StartCoroutine(DelayExit());
-    }
-    public void DestroyJoint()
-    {
-        joint.connectedBody.useGravity = true;
-        joint.connectedBody = null;
-        Destroy(joint);
     }
     public void ReleaseInteractable()
     {
@@ -88,17 +68,15 @@ public class ControllerInteractors : XRDirectInteractor
     }
     public IEnumerator DelayEnter()
     {
-        foreach (Collider collider in handPresence.GetComponent<HandPresencePhysics>().handColliders)
+        foreach (Collider collider in handPhysics.GetComponent<HandPresencePhysics>().handColliders)
         {
             collider.isTrigger = true;
         }
         handPhysics.transform.position = attach.position;
         handPhysics.transform.rotation = attach.rotation;
-        handPresence.transform.position = attach.position;
-        handPresence.transform.rotation = attach.rotation;
         yield return new WaitForSeconds(1f);
 
-        foreach (Collider collider in handPresence.GetComponent<HandPresencePhysics>().handColliders)
+        foreach (Collider collider in handPhysics.GetComponent<HandPresencePhysics>().handColliders)
         {
             collider.isTrigger = false;
         }
@@ -107,7 +85,15 @@ public class ControllerInteractors : XRDirectInteractor
     {
         yield return new WaitForSeconds(0.5f);
 
-        handPresence.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(true);
+        handPhysics.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(true);
+    }
+    private void FixedUpdate()
+    {
+        if(configJoint != null)
+        {
+            configJoint.targetVelocity = handPhysics.transform.position * 100000;
+            rb.AddForce(handPhysics.transform.position * 1000);
+        }
     }
 }
 
