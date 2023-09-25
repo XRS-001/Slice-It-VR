@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Slice : MonoBehaviour
 {
+    XRGrabInteractableTwoAttach grabInteractable;
     public AudioSource audioSource;
     public AudioClip sliceSound;
     private float velocity;
@@ -51,9 +53,10 @@ public class Slice : MonoBehaviour
     }
     public void SliceObject(GameObject target)
     {
+        audioSource.Stop();
         audioSource.PlayOneShot(sliceSound);
-        Vector3 velocity = velocityEstimator.GetVelocityEstimate();
-        Vector3 planeNormal = Vector3.Cross(endSlicePoint.position - startSlicePoint.position, velocity);
+        Vector3 velocitySlice = velocityEstimator.GetVelocityEstimate();
+        Vector3 planeNormal = Vector3.Cross(endSlicePoint.position - startSlicePoint.position, velocitySlice);
         planeNormal.Normalize();
 
         SlicedHull hull = target.Slice(endSlicePoint.position, planeNormal);
@@ -67,6 +70,8 @@ public class Slice : MonoBehaviour
             SetupSlicedComponent(lowerHull);
 
             Destroy(target);
+            GameObject.Find("GameManager").GetComponent<GameManager>().score++;
+            grabInteractable.controllerGrabbing.SendHapticImpulse(1, 0.05f);
         }
     }
     public void SetupSlicedComponent(GameObject slicedObject)
@@ -75,6 +80,7 @@ public class Slice : MonoBehaviour
         rb.mass = 10.0f;
         MeshCollider collider = slicedObject.AddComponent<MeshCollider>();
         collider.convex = true;
+        Destroy(slicedObject, 5);
     }
 }
 

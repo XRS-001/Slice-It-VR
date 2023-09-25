@@ -23,6 +23,7 @@ public class XRGrabInteractableTwoAttach : XRGrabInteractable
     }
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
+        GetComponent<Rigidbody>().isKinematic = false;
         if (args.interactorObject.transform.CompareTag("RightHand"))
         {
             leftHandGrabbing = false;

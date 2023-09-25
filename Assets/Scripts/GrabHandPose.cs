@@ -54,7 +54,7 @@ public class GrabHandPose : MonoBehaviour
                 SetHandDataValues(handData, leftHandPose);
             }
 
-            StartCoroutine(SetHandDataRoutine(handData, finalHandPosition, finalHandRotation, finalFingerRotations, startingHandPosition, startingHandRotation, startingFingerRotations));
+            SetHandData(handData, finalHandPosition, finalHandRotation, finalFingerRotations);
         }
     }
     public void UnSetPose(BaseInteractionEventArgs args)
@@ -64,7 +64,7 @@ public class GrabHandPose : MonoBehaviour
             HandData handData = args.interactorObject.transform.GetComponentInChildren<ControllerInteractors>().handRig;
             handData.animator.enabled = true;
 
-            StartCoroutine(SetHandDataRoutine(handData, startingHandPosition, startingHandRotation, startingFingerRotations, finalHandPosition, finalHandRotation, finalFingerRotations));
+            SetHandData(handData, startingHandPosition, startingHandRotation, startingFingerRotations);
         }
     }
     public void SetHandDataValues(HandData h1, HandData h2)
@@ -85,7 +85,7 @@ public class GrabHandPose : MonoBehaviour
         }
     }
 
-    public void SetHandData(HandData h, Vector3 newPosition, Quaternion newRotation, Quaternion[] newBonesRotation)
+    private void SetHandData(HandData h, Vector3 newPosition, Quaternion newRotation, Quaternion[] newBonesRotation)
     {
         h.root.localPosition = newPosition;
         h.root.localRotation = newRotation;
