@@ -24,7 +24,6 @@ public class RayInteractors : XRRayInteractor
     }
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        maxRaycastDistance = 0;
         audioSource.pitch = 1.3f;
         audioSource.Play();
         isGrabbing = true;
@@ -49,6 +48,7 @@ public class RayInteractors : XRRayInteractor
             configJoint.connectedBody = rb;
             configJoint.autoConfigureConnectedAnchor = false;
             configJoint.connectedAnchor = rb.transform.InverseTransformPoint(handPhysics.transform.position);
+            maxRaycastDistance = 0;
         }
     }
 

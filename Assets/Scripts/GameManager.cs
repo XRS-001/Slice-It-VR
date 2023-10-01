@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     public int score;
     public Transform[] cannons;
     public GameObject[] sliceableObjectsPrefabs;  // Prefab for the sliceable object
-    public Image startFadeImage;
     public GameObject physicsRig;
     public XRInteractorLineVisual leftRay;
     public XRInteractorLineVisual rightRay;
@@ -49,7 +48,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(GameObject.Find("XR Interaction Manager"));
         DontDestroyOnLoad(this.gameObject);
 
-        StartCoroutine(FadeImage());
     }
 
     public void SpawnItem(GameObject grabbedObject)
@@ -70,31 +68,7 @@ public class GameManager : MonoBehaviour
             Destroy(GameObject.Find("PhysicsRig"));
             Destroy(GameObject.Find("GameManager"));
         }
-        StartCoroutine(FadeImage());
-    }
-
-    IEnumerator FadeImage()
-    {
-        // Set the image's color to opaque
-        startFadeImage.color = new Color(startFadeImage.color.r, startFadeImage.color.g, startFadeImage.color.b, 1f);
-
-        // Wait for a short delay
-        yield return new WaitForSeconds(0.5f);
-
-        // Gradually decrease the alpha value of the image's color over time
-        float fadeDuration = 2f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
-            startFadeImage.color = new Color(startFadeImage.color.r, startFadeImage.color.g, startFadeImage.color.b, alpha);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        physicsRig.SetActive(false);
-        physicsRig.SetActive(true);
+        StartCoroutine(Delay());
     }
 
     public void StartWave(string selectedDifficulty, GameObject cannonParent)
@@ -262,6 +236,15 @@ public class GameManager : MonoBehaviour
             currentLevel = PlayerPrefs.GetInt("PlayerLevel");
             currentPoints = PlayerPrefs.GetInt("CurrentPoints");
         }
+    }
+    public IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        leftRay.gameObject.SetActive(false);
+        leftRay.gameObject.SetActive(true);
+        rightRay.gameObject.SetActive(false);
+        rightRay.gameObject.SetActive(true);
     }
 }
 

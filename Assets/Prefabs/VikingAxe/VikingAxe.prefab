@@ -235,8 +235,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1780412232538723731}
-  m_LocalRotation: {x: -0.59601337, y: 0.7209853, z: -0.12310326, w: 0.3313516}
-  m_LocalPosition: {x: 0, y: -0, z: -0}
+  m_LocalRotation: {x: -0.3125748, y: 0.76965183, z: 0.018750938, w: 0.5564005}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1795,14 +1795,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2308471390066316658}
-  m_LocalRotation: {x: 0.19105226, y: -0.25056982, z: 0.20037703, w: 0.92766535}
-  m_LocalPosition: {x: 0.0552, y: -0.1746, z: 0.0332}
+  m_LocalRotation: {x: -0.11102756, y: -0.21300234, z: -0.064497046, w: 0.96857786}
+  m_LocalPosition: {x: 0.0494, y: -0.1499, z: 0.0039}
   m_LocalScale: {x: 1.4285712, y: 1.4285713, z: 1.4285713}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2826372117232606036}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 27.057, y: -25.852, z: 18.056}
+  m_LocalEulerAnglesHint: {x: -14.037, y: -24.24, z: -4.59}
 --- !u!1 &2308471390072047706
 GameObject:
   m_ObjectHideFlags: 0
@@ -2070,15 +2070,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2308471391588751567}
-  m_LocalRotation: {x: 0.20313713, y: -0.000000029802322, z: 0.000000014901161, w: 0.9791503}
-  m_LocalPosition: {x: 0.051, y: 0, z: -0}
+  m_LocalRotation: {x: -0.07356989, y: -0, z: 0.000000007450581, w: 0.99729013}
+  m_LocalPosition: {x: 0.037, y: 0.038, z: -0.016}
   m_LocalScale: {x: 1.4285712, y: 1.4285713, z: 1.4285713}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1780412233526155847}
   m_Father: {fileID: 2826372117232606036}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 23.441, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -8.438, y: 0, z: 0}
 --- !u!1 &2308471391655350783
 GameObject:
   m_ObjectHideFlags: 0
@@ -2623,6 +2623,7 @@ MonoBehaviour:
   rightAttachSecond: {fileID: 2308471391097193424}
   leftAttachSecond: {fileID: 2308471390066316661}
   secondHandGrabPoint: {fileID: 2308471391747758955}
+  secondInteractor: {fileID: 0}
   twoHandRotationType: 1
   snapToSecondHand: 0
 --- !u!1 &8954917291810817465

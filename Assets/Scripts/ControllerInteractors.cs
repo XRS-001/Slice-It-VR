@@ -26,7 +26,6 @@ public class ControllerInteractors : XRDirectInteractor
     }
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        rayInteractor.maxRaycastDistance = 0;
         audioSource.pitch = 1.3f;
         audioSource.Play();
         isGrabbing = true;
@@ -52,6 +51,7 @@ public class ControllerInteractors : XRDirectInteractor
             configJoint.connectedBody = rb;
             configJoint.autoConfigureConnectedAnchor = false;
             configJoint.connectedAnchor = rb.transform.InverseTransformPoint(handPhysics.transform.position);
+            rayInteractor.maxRaycastDistance = 0;
         }
     }
 

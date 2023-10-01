@@ -8,12 +8,9 @@ public class ContinuousMovementPhysics : MonoBehaviour
     public AudioSource footstepSource;
     public float speed = 1;
     public float turnSpeed = 60;
-    private float jumpVelocity = 7;
-    public float jumpHeight = 30f;
     public bool onlyMoveWhenGrounded = false;
     public InputActionProperty turnInputSource;
     public InputActionProperty moveInputSource;
-    public InputActionProperty jumpInputSource;
     public Rigidbody rb;
     private bool isGrounded;
     public LayerMask groundLayer;
@@ -30,14 +27,6 @@ public class ContinuousMovementPhysics : MonoBehaviour
     {
         inputMoveAxis = moveInputSource.action.ReadValue<Vector2>();
         inputTurnAxis = turnInputSource.action.ReadValue<Vector2>().x;
-
-        bool jumpInput = jumpInputSource.action.WasPressedThisFrame();
-
-        if (jumpInput && isGrounded)
-        {
-            jumpVelocity = Mathf.Sqrt(2 * -Physics.gravity.y * jumpHeight);
-            rb.velocity = Vector3.up * jumpVelocity;
-        }
 
         // Check if the player is moving.
         isMoving = inputMoveAxis.magnitude > 0.1f;
