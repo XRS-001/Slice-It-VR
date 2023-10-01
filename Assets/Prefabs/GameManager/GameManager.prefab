@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8985861808674452145}
   - component: {fileID: 9011581937100793261}
-  - component: {fileID: 1539762222532730818}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17176443ae3b1e94f82615aeb03de98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: {fileID: 0}
+  currentLevel: 1
+  currentPoints: 0
   sceneAudio: {fileID: 0}
   waveAudio: {fileID: 8300000, guid: 8f05fbba7c052194697899695a338e70, type: 3}
   waveElapsedMenu: {fileID: 0}
@@ -52,106 +54,20 @@ MonoBehaviour:
   score: 0
   cannons: []
   sliceableObjectsPrefabs:
-  - {fileID: 3070203260655768845, guid: dd4d2de419e13da44a5466c42997923c, type: 3}
-  - {fileID: 2273732459265401944, guid: 8ebd6f402e9ed424eb567aadc4efb1fe, type: 3}
-  - {fileID: 7179856636227100909, guid: aa4ca533f1f75a14c9f811d7dab08593, type: 3}
+  - {fileID: 6588720086564721160, guid: 199e4335c8249454a840846b1983dcff, type: 3}
+  - {fileID: 2905358971791077862, guid: 85bb31b4d1210384d93351fb628e7dbb, type: 3}
+  - {fileID: 5441813767931340810, guid: 89262ca7e52026f4a8f3b3256b329024, type: 3}
+  - {fileID: 320109996435948641, guid: 6694f3a453d086f4b8a5bcd5eca4c55b, type: 3}
+  - {fileID: 8681915581847215043, guid: 9495397881f02224ab54d4643b40c6bc, type: 3}
+  - {fileID: 7873538290190782418, guid: 0aa32aa5511846d4e85188227cc8f3cd, type: 3}
+  - {fileID: 5672692609372970030, guid: 21d6bb41670773845aa3374e1fe7a960, type: 3}
+  - {fileID: 7253033303282873819, guid: 088fcb9c5a6d2234fb9da6bb011f3fa7, type: 3}
+  - {fileID: 8452640998729585844, guid: ee8e28debc73b89489abe36b36dc8dd8, type: 3}
+  - {fileID: 1572913628806927598, guid: f8240cf02ad082b4ba01f85de4d69653, type: 3}
   startFadeImage: {fileID: 0}
   physicsRig: {fileID: 0}
   leftRay: {fileID: 0}
   rightRay: {fileID: 0}
---- !u!82 &1539762222532730818
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9216735303035589330}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  levelText: {fileID: 0}
+  progressBar: {fileID: 0}
+  currentProgress: 0

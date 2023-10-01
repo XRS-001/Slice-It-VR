@@ -39,11 +39,19 @@ public class GrabHandPose : MonoBehaviour
 
     public void SetupPose(BaseInteractionEventArgs args)
     {
-        if (args.interactorObject is XRDirectInteractor)
+        if (args.interactorObject is XRBaseInteractor)
         {
-            HandData handData = args.interactorObject.transform.GetComponentInChildren<ControllerInteractors>().handRig;
+            HandData handData = args.interactorObject.transform?.GetComponentInChildren<ControllerInteractors>()?.handRig;
+            if(handData == null)
+            {
+                handData = args.interactorObject.transform.GetComponentInChildren<RayInteractors>().handRig;
+            }
 
-            handData.animator.enabled = false;
+            try
+            {
+                handData.animator.enabled = false;
+            }
+            catch { }
 
             if (handData.handType == HandData.HandModelType.right)
             {
@@ -59,9 +67,14 @@ public class GrabHandPose : MonoBehaviour
     }
     public void UnSetPose(BaseInteractionEventArgs args)
     {
-        if (args.interactorObject is XRDirectInteractor && gameObject.activeInHierarchy)
+        if (args.interactorObject is XRBaseInteractor && gameObject.activeInHierarchy)
         {
-            HandData handData = args.interactorObject.transform.GetComponentInChildren<ControllerInteractors>().handRig;
+            HandData handData = args.interactorObject.transform?.GetComponentInChildren<ControllerInteractors>()?.handRig;
+            if (handData == null)
+            {
+                handData = args.interactorObject.transform.GetComponentInChildren<RayInteractors>().handRig;
+            }
+
             handData.animator.enabled = true;
 
             SetHandData(handData, startingHandPosition, startingHandRotation, startingFingerRotations);

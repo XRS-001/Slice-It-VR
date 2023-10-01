@@ -20,7 +20,7 @@ public class Slice : MonoBehaviour
     public Transform endSlicePointAlt;
     public VelocityEstimator velocityEstimator;
     public LayerMask sliceableLayer;
-    public Material crossSectionMaterial;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -54,7 +54,15 @@ public class Slice : MonoBehaviour
     public void SliceObject(GameObject target)
     {
         audioSource.Stop();
-        audioSource.PlayOneShot(sliceSound);
+        audioSource.pitch = Random.Range(1.1f, 1.4f);
+        if(velocity / 7.5f < 0.3f)
+        {
+            audioSource.PlayOneShot(sliceSound, 0.3f);
+        }
+        else
+        {
+            audioSource.PlayOneShot(sliceSound, velocity / 7.5f);
+        }
         Vector3 velocitySlice = velocityEstimator.GetVelocityEstimate();
         Vector3 planeNormal = Vector3.Cross(endSlicePoint.position - startSlicePoint.position, velocitySlice);
         planeNormal.Normalize();
@@ -63,10 +71,10 @@ public class Slice : MonoBehaviour
 
         if(hull != null)
         {
-            GameObject upperHull = hull.CreateUpperHull(target, crossSectionMaterial);
+            GameObject upperHull = hull.CreateUpperHull(target, target.GetComponent<SliceableObject>().slicedMaterial);
             SetupSlicedComponent(upperHull);
 
-            GameObject lowerHull = hull.CreateLowerHull(target, crossSectionMaterial);
+            GameObject lowerHull = hull.CreateLowerHull(target, target.GetComponent<SliceableObject>().slicedMaterial);
             SetupSlicedComponent(lowerHull);
 
             Destroy(target);
@@ -76,6 +84,7 @@ public class Slice : MonoBehaviour
     }
     public void SetupSlicedComponent(GameObject slicedObject)
     {
+        slicedObject.layer = 9;
         Rigidbody rb = slicedObject.AddComponent<Rigidbody>();
         rb.mass = 10.0f;
         MeshCollider collider = slicedObject.AddComponent<MeshCollider>();

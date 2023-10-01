@@ -11,10 +11,6 @@ public class PhysicsRig : MonoBehaviour
     public Transform leftController;
     public Transform rightController;
 
-    public ConfigurableJoint rightJoint;
-    public Collider[] rightJointColliders;
-    public ConfigurableJoint leftJoint;
-    public Collider[] leftJointColliders;
 
     private void Start()
     {
@@ -25,11 +21,5 @@ public class PhysicsRig : MonoBehaviour
     {
         bodyCollider.height = Mathf.Clamp(playerHead.localPosition.y, bodyHeightMin, bodyHeightMax);
         bodyCollider.center = new Vector3(playerHead.localPosition.x, bodyCollider.height / 2, playerHead.localPosition.z);
-
-        leftJoint.targetPosition = leftController.localPosition;
-        leftJoint.targetRotation = leftController.localRotation;
-
-        rightJoint.targetPosition = rightController.localPosition;
-        rightJoint.targetRotation = rightController.localRotation;
     }
 }

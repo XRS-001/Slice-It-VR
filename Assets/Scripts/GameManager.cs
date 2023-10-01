@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,8 +7,15 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class GameManager : MonoBehaviour
 {
+    public Slider waveAudioSlider;
+    public float waveAudioLevel;
+    public TextMeshProUGUI level;
+    public int currentLevel = 0;
+    public int currentPoints = 0;
     public GameObject sceneAudio;
-    public AudioClip waveAudio;
+    public AudioClip waveAudioDesert;
+    public AudioClip waveAudioForest;
+    public AudioClip waveAudioCliff;
     public GameObject waveElapsedMenu;
     public GameObject waveEndMenu;
     public int score;
@@ -20,14 +28,22 @@ public class GameManager : MonoBehaviour
     private float spawnInterval;
 
     private bool isWaveActive = false;
-    private float waveDuration = 120f;  // Wave duration in seconds (1 minute)
+    private float waveDuration = 118f;
     private float objectSpeed = 13f;   // Speed at which sliceable objects are shot out
 
     private AudioSource waveAudioSource; // Reference to the AudioSource component of the waveAudio
+    public Text levelText;
+    public Image progressBar;
+    public float currentProgress;
 
     // Start is called before the first frame update
     void Start()
     {
+        LoadLevel();
+        if(currentPoints == 0)
+        {
+            currentLevel = 0;
+        }
         DontDestroyOnLoad(leftRay.reticle);
         DontDestroyOnLoad(rightRay.reticle);
         DontDestroyOnLoad(GameObject.Find("XR Interaction Manager"));
@@ -94,8 +110,20 @@ public class GameManager : MonoBehaviour
     {
         // Get the AudioSource component of the waveAudio GameObject
         waveAudioSource = sceneAudio.GetComponent<AudioSource>();
+        string currentScene = SceneManager.GetActiveScene().name;
         // Start playing the wave audio
-        waveAudioSource.PlayOneShot(waveAudio, 0.2f);
+        if(currentScene == "Desert")
+        {
+            waveAudioSource.PlayOneShot(waveAudioDesert, waveAudioLevel);
+        }
+        if (currentScene == "Forest")
+        {
+            waveAudioSource.PlayOneShot(waveAudioForest, waveAudioLevel);
+        }
+        if (currentScene == "Cliff")
+        {
+            waveAudioSource.PlayOneShot(waveAudioCliff, waveAudioLevel);
+        }
 
         Debug.Log("Starting Wave");
         isWaveActive = true;
@@ -148,6 +176,9 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeOutWaveAudio());
 
         // End the wave
+        currentPoints += score;
+        CalculateLevel();
+        SaveLevel();
         isWaveActive = false;
         waveElapsedMenu.SetActive(false);
         waveEndMenu.SetActive(true);
@@ -171,13 +202,66 @@ public class GameManager : MonoBehaviour
 
         // Stop playing the wave audio
         waveAudioSource.Stop();
+        waveAudioSource.volume = startVolume;
     }
 
     private void Update()
     {
+        if (waveAudioSlider)
+        {
+            waveAudioLevel = waveAudioSlider.value;
+        }
         sceneAudio = GameObject.Find("SceneAudio");
+        level = GameObject.Find("LevelText")?.GetComponent<TextMeshProUGUI>();
+        if (level)
+        {
+            level.text = $"Level: {currentLevel}";
+        }
+        progressBar = GameObject.Find("ProgressBar")?.GetComponent<Image>();
+        if (progressBar)
+        {
+            float pointsNeededForNextLevel;
+
+            if (currentLevel == 0)
+            {
+                pointsNeededForNextLevel = -currentPoints + 100; // Allow progress from 0 to 100 points
+            }
+            else
+            {
+                pointsNeededForNextLevel = (currentLevel * 100 + 100) - currentPoints;
+            }
+
+            currentProgress = 1f - (pointsNeededForNextLevel / 100);
+
+            currentProgress = Mathf.Clamp01(currentProgress);
+
+            progressBar.fillAmount = currentProgress;
+
+        }
+
         waveElapsedMenu = GameObject.Find("WaveElapsedMenu") ?? null;
         waveEndMenu = GameObject.Find("WaveOverMenu")?.GetComponentsInChildren<Transform>(true)[1].gameObject;
+    }
+    public void CalculateLevel()
+    {
+        currentLevel = Mathf.FloorToInt(currentPoints / 100);
+    }
+    public void SaveLevel()
+    {
+        PlayerPrefs.SetFloat("WaveAudio", waveAudioSlider.value);
+        PlayerPrefs.SetInt("CurrentPoints", currentPoints);
+        PlayerPrefs.SetInt("PlayerLevel", currentLevel);
+        PlayerPrefs.Save();
+    }
+
+    public void LoadLevel()
+    {
+        if (PlayerPrefs.HasKey("PlayerLevel"))
+        {
+            waveAudioSlider.value = PlayerPrefs.GetFloat("WaveAudio");
+            currentLevel = PlayerPrefs.GetInt("PlayerLevel");
+            currentPoints = PlayerPrefs.GetInt("CurrentPoints");
+        }
     }
 }
 

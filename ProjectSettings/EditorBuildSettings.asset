@@ -6,15 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: 486eec1f5917d75478cf2c1df90614d7
   - enabled: 1
     path: Assets/Scenes/Desert.unity
     guid: adfb7bdc0f9e78b47b1ab0b173c547b0
+  - enabled: 1
+    path: Assets/Scenes/Forest.unity
+    guid: d4876c14e31c198428b59afca89fb554
+  - enabled: 1
+    path: Assets/Scenes/Cliff.unity
+    guid: 34e88b8fdaad9f64c8f4bbf3e9112928
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 355b1c3ebdf35bf4ba50122d71d33cb3,
+      type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 8c93989bfe54c9a4e9ebd63ca19b5cbe,
+      type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000,
+      guid: fd4cd72d8869b74478d0fbd1754344db, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b29fcaec2aff1164392eb5c2e771f134,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: efbe161257af75a4cb01ad8636aae89b,

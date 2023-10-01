@@ -42,18 +42,50 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
         {
             if (rightHandGrabbing)
             {
-                secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.position = leftAttachSecond.position;
-                secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = leftAttachSecond.rotation;
+                try
+                {
+                    secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.position = leftAttachSecond.position;
+                    secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = leftAttachSecond.rotation;
+                }
+                catch 
+                {
+                    secondInteractor.GetComponent<RayInteractors>().handPhysics.transform.position = leftAttachSecond.position;
+                    secondInteractor.GetComponent<RayInteractors>().handPhysics.transform.rotation = leftAttachSecond.rotation;
+                }
+
             }
             if (leftHandGrabbing)
             {
-                secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.position = rightAttachSecond.position;
-                secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = rightAttachSecond.rotation;
+                try
+                {
+                    secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.position = rightAttachSecond.position;
+                    secondInteractor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = rightAttachSecond.rotation;
+                }
+                catch 
+                {
+                    secondInteractor.GetComponent<RayInteractors>().handPhysics.transform.position = rightAttachSecond.position;
+                    secondInteractor.GetComponent<RayInteractors>().handPhysics.transform.rotation = rightAttachSecond.rotation;
+                }
+
             }
             if (snapToSecondHand)
-                interactor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = GetTwoHandRotation();
+                try
+                {
+                    interactor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = GetTwoHandRotation();
+                }
+                catch
+                {
+                    interactor.GetComponent<RayInteractors>().handPhysics.transform.rotation = GetTwoHandRotation();
+                }
             else
-                interactor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = GetTwoHandRotation() * initialRotationOffset;
+                try
+                {
+                    interactor.GetComponent<ControllerInteractors>().handPhysics.transform.rotation = GetTwoHandRotation() * initialRotationOffset;
+                }
+                catch
+                {
+                    interactor.GetComponent<RayInteractors>().handPhysics.transform.rotation = GetTwoHandRotation() * initialRotationOffset;
+                }
         }
         base.ProcessInteractable(updatePhase);
     }
@@ -80,8 +112,16 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
         trackPosition = true;
         trackRotation = true;
         Debug.Log("SECOND HAND GRAB");
-        secondInteractor = args.interactorObject.transform.GetComponent<ControllerInteractors>();
-        secondInteractor.GetComponent<ControllerInteractors>().handPhysics.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(false);
+        try
+        {
+            secondInteractor = args.interactorObject.transform.GetComponent<ControllerInteractors>();
+            secondInteractor.GetComponent<ControllerInteractors>().rayInteractor.maxRaycastDistance = 0;
+        }
+        catch
+        {
+            secondInteractor = args.interactorObject.transform.GetComponent<RayInteractors>();
+            secondInteractor.GetComponent<RayInteractors>().maxRaycastDistance = 0;
+        }
         initialRotationOffset = Quaternion.Inverse(GetTwoHandRotation()) * interactor.attachTransform.rotation;
     }
     public void OnSecondHandRelease(SelectExitEventArgs args)
@@ -89,17 +129,32 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
         secondHandGrabbing = false;
         trackPosition = false;
         trackRotation = false;
-        secondInteractor.GetComponent<ControllerInteractors>().handPhysics.GetComponent<HandPresencePhysics>().handColliderParent.SetActive(true);
+        try
+        {
+            secondInteractor.GetComponent<ControllerInteractors>().rayInteractor.maxRaycastDistance = 30;
+        }
+        catch
+        {
+            secondInteractor.GetComponent<RayInteractors>().maxRaycastDistance = 30;
+        }
         StartCoroutine(Delay());
         Debug.Log("SECOND HAND RELEASE");
     }
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         interactor = selectingInteractor;
-        secondHandGrabPointCollider.enabled = true;
         Debug.Log("FIRST HAND GRAB");
         base.OnSelectEntered(args);
-        attachInitialRotation = args.interactorObject.transform.GetComponent<ControllerInteractors>().attachTransform.localRotation;
+        try
+        {
+            attachInitialRotation = args.interactorObject.transform.GetComponent<ControllerInteractors>().attachTransform.localRotation;
+        }
+        catch
+        {
+            attachInitialRotation = args.interactorObject.transform.GetComponent<RayInteractors>().attachTransform.localRotation;
+            args.interactorObject.transform.GetComponent<RayInteractors>().maxRaycastDistance = 0;
+        }
+        StartCoroutine(DelaySecondGrab());
     }
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
@@ -127,11 +182,27 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
                     GetComponent<TwoHandInteractable>().attachTransform = rightAttach;
                 }
                 XRInteractionManager.SelectEnter(interactor, interactable);
-                initialRotationOffset = Quaternion.Inverse(GetTwoHandRotation()) * interactor.transform.GetComponent<ControllerInteractors>().attachTransform.rotation;
+                try
+                {
+                    attachInitialRotation = args.interactorObject.transform.GetComponent<ControllerInteractors>().attachTransform.localRotation;
+                }
+                catch
+                {
+                    attachInitialRotation = args.interactorObject.transform.GetComponent<RayInteractors>().attachTransform.localRotation;
+                    args.interactorObject.transform.GetComponent<RayInteractors>().maxRaycastDistance = 0;
+                }
             }
             catch { }
         }
-        args.interactorObject.transform.GetComponent<ControllerInteractors>().attachTransform.localRotation = attachInitialRotation;
+        try
+        {
+            args.interactorObject.transform.GetComponent<ControllerInteractors>().attachTransform.localRotation = attachInitialRotation;
+        }
+        catch
+        {
+            args.interactorObject.transform.GetComponent<RayInteractors>().attachTransform.localRotation = attachInitialRotation;
+            args.interactorObject.transform.GetComponent<RayInteractors>().maxRaycastDistance = 30;
+        }
     }
     public override bool IsSelectableBy(IXRSelectInteractor interactor)
     {
@@ -146,5 +217,14 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
         {
             secondInteractor = null;
         }
+    }
+    public IEnumerator DelaySecondGrab()
+    {
+        secondHandGrabPointCollider.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
+
+        secondHandGrabPointCollider.gameObject.SetActive(true);
+        secondHandGrabPointCollider.enabled = true;
     }
 }
