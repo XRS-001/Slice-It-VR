@@ -19,6 +19,7 @@ public class ControllerInteractors : XRDirectInteractor
     public GameObject handPhysics;
     private ConfigurableJoint joint;
     private ConfigurableJoint configJoint;
+    public bool secondHandGrabbing;
     public bool isGrabbing;
     private void Start()
     {

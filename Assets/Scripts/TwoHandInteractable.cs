@@ -40,6 +40,17 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
     {
         if (secondInteractor && interactor)
         {
+            ControllerInteractors controllerCheck = interactor?.GetComponent<ControllerInteractors>();
+            RayInteractors raycasterCheck = interactor?.GetComponent<RayInteractors>();
+            if(controllerCheck)
+            {
+                interactor.GetComponent<ControllerInteractors>().secondHandGrabbing = true;
+
+            }
+            if (raycasterCheck)
+            {
+                interactor.GetComponent<RayInteractors>().secondHandGrabbing = true;
+            }
             if (rightHandGrabbing)
             {
                 ControllerInteractors controller = secondInteractor.GetComponent<ControllerInteractors>();
@@ -113,6 +124,20 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
                 }
             }
         }
+        else
+        {
+            ControllerInteractors controllerCheck = interactor?.GetComponent<ControllerInteractors>();
+            RayInteractors raycasterCheck = interactor?.GetComponent<RayInteractors>();
+            if (controllerCheck)
+            {
+                interactor.GetComponent<ControllerInteractors>().secondHandGrabbing = false;
+
+            }
+            if (raycasterCheck)
+            {
+                interactor.GetComponent<RayInteractors>().secondHandGrabbing = false;
+            }
+        }
         base.ProcessInteractable(updatePhase);
     }
 
@@ -182,6 +207,7 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
+        secondHandGrabPoint.enabled = true;
         interactor = selectingInteractor;
         Debug.Log("FIRST HAND GRAB");
         base.OnSelectEntered(args);
@@ -208,6 +234,7 @@ public class TwoHandInteractable : XRGrabInteractableTwoAttach
         base.OnSelectExited(args);
         secondHandGrabPoint.enabled = false;
         secondHandGrabPoint.enabled = true;
+        secondHandGrabPoint.enabled = false;
     }
 
     public override bool IsSelectableBy(IXRSelectInteractor interactor)

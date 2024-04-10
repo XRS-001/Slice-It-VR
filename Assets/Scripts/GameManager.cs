@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
 
     private bool isWaveActive = false;
     private float waveDuration = 118f;
-    private float objectSpeed = 13f;   // Speed at which sliceable objects are shot out
+    private float objectSpeed = 0.13f;   // Speed at which sliceable objects are shot out
 
     private AudioSource waveAudioSource; // Reference to the AudioSource component of the waveAudio
     public Text levelText;

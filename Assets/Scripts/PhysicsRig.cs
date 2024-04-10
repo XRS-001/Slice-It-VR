@@ -11,7 +11,6 @@ public class PhysicsRig : MonoBehaviour
     public Transform leftController;
     public Transform rightController;
 
-
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
